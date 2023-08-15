@@ -1,0 +1,23 @@
+#cloud-config
+# Create a group
+groups:
+  - hadmin
+
+# Create users, in addition to the users provided by default
+users:
+  - default
+  - name: hadmin
+    gecos: hadmin
+    shell: /bin/bash
+    primary_group: hadmin
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    lock_passwd: false
+    # ssh_authorized_keys:
+    #  - "ssh-rsa ..." # an SSH public key that is authorized
+    #                  # to connect to this account
+# Run a few commands (update apt's repo indexes and install curl)
+runcmd:
+        - sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+        - sudo systemctl restart sshd
+        - echo "Done"
